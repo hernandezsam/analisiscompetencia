@@ -74,6 +74,11 @@ def productos():
 lista_de_productos = productos()
 df = pd.DataFrame(data=lista_de_productos)
 df['Prod']=df['Nombre'].str.split(' ').str[0]
+df['Precio'] = df['Precio'].str.replace(r'[^\d.]', '', regex=True)
+df['Precio'] = df['Precio'].str.replace('.', '')
+df['Precio'] = df['Precio'].astype(int)
+
+
 
 
 
@@ -102,6 +107,7 @@ df_filtrado = df[
 ]
 
 suma_por_item = df_filtrado.groupby(['Prod'])['Nombre'].count().reset_index()
+suma_por_item['Total_Precio'] = df_filtrado.groupby('Prod')['Precio'].sum().reset_index()['Precio']
 suma_por_item.rename(columns={'Nombre': 'Cantidad'}, inplace=True)
 
 
@@ -110,17 +116,23 @@ suma_por_item.rename(columns={'Nombre': 'Cantidad'}, inplace=True)
 # Mostrar los resultados
 st.header('Arica Petshop')
 if not df_filtrado.empty:
-    st.dataframe(df_filtrado)
-    st.dataframe(suma_por_item)
+    
+    
+    
+    rows = st.columns(2)
+    rows[0].dataframe(df_filtrado)
+    rows[1].dataframe(suma_por_item)
+
 
     plt.figure(figsize=(17, 6))
+    
     plt.bar(suma_por_item['Prod'], suma_por_item['Cantidad'])
     plt.xlabel('Producto')
     plt.ylabel('Cantidad')
     plt.xticks(rotation=90, ha='right')
     plt.title('Productos')
     
-    st.pyplot(plt)
+    
     
 
     # Crear un flujo de bytes para el archivo Excel
@@ -138,3 +150,4 @@ if not df_filtrado.empty:
 else:
     st.warning('No se encontraron productos con los filtros proporcionados.')
 
+st.pyplot(plt)
