@@ -110,8 +110,7 @@ suma_por_item = df_filtrado.groupby(['Prod'])['Nombre'].count().reset_index()
 suma_por_item['Total_Precio'] = df_filtrado.groupby('Prod')['Precio'].sum().reset_index()['Precio']
 suma_por_item.rename(columns={'Nombre': 'Cantidad'}, inplace=True)
 
-
-
+top_10_productos = suma_por_item.sort_values(by='Total_Precio', ascending=False).head(10)
 
 # Mostrar los resultados
 st.header('Arica Petshop')
@@ -126,11 +125,14 @@ if not df_filtrado.empty:
 
     plt.figure(figsize=(17, 6))
     
-    plt.bar(suma_por_item['Prod'], suma_por_item['Cantidad'])
+    plt.bar(top_10_productos['Prod'], top_10_productos['Total_Precio'])
+    for i, monto in enumerate(top_10_productos['Total_Precio']):
+        plt.text(i, monto, str(monto), ha='center', va='bottom')
+
     plt.xlabel('Producto')
-    plt.ylabel('Cantidad')
+    plt.ylabel('Precio')
     plt.xticks(rotation=90, ha='right')
-    plt.title('Productos')
+    plt.title('Top 10 Productos por Monto Tota')
     
     
     
