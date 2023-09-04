@@ -34,7 +34,7 @@ headers = {'User-Agent' : user_agent}
 def productos():
 
     mas_links = True
-    pagina = 2
+    pagina = 1
     productos = []
     while (mas_links):
         start_url = f"https://aricapetshop.cl/collections/todos?page={pagina}"
@@ -132,7 +132,7 @@ if not df_filtrado.empty:
     plt.xlabel('Producto')
     plt.ylabel('Precio')
     plt.xticks(rotation=90, ha='right')
-    plt.title('Top 10 Productos por Monto Tota')
+    plt.title('Top 10 Productos por Monto Total')
     
     
     
