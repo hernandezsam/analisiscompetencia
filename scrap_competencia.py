@@ -1,4 +1,5 @@
 from logging import PlaceHolder
+from operator import index
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -101,9 +102,10 @@ if filtro_nombre != filtro_nombre_anterior:
     st.session_state.filtro_nombre = filtro_nombre
 
 
+
 # Filtrar el DataFrame por nombre y producto
 df_filtrado = df[
-    (df['Nombre'].str.contains(filtro_nombre, case=False)) 
+    (df['Nombre'].str.contains( filtro_nombre , case=False)) 
 ]
 
 suma_por_item = df_filtrado.groupby(['Prod'])['Nombre'].count().reset_index()
@@ -112,16 +114,23 @@ suma_por_item.rename(columns={'Nombre': 'Cantidad'}, inplace=True)
 
 top_10_productos = suma_por_item.sort_values(by='Total_Precio', ascending=False).head(10)
 
+# Metricas
+
+metrica1 = df_filtrado['Nombre'].value_counts().sum()
+metrica2 = df_filtrado['Prod'].nunique()
+metrica3 = df_filtrado['Precio'].sum()
+
+
 # Mostrar los resultados
 st.header('Arica Petshop')
 if not df_filtrado.empty:
     
-    
-    
-    rows = st.columns(2)
-    rows[0].dataframe(df_filtrado)
-    rows[1].dataframe(suma_por_item)
 
+
+    col1,col2,col3=st.columns(3)
+    col1.metric(label="Cant. de Productos",value=metrica1)
+    col2.metric(label="Cant. de Marcas",value=metrica2)
+    col3.metric(label="Monto Total",value=metrica3)
 
     plt.figure(figsize=(17, 6))
     
@@ -133,6 +142,16 @@ if not df_filtrado.empty:
     plt.ylabel('Precio')
     plt.xticks(rotation=90, ha='right')
     plt.title('Top 10 Productos por Monto Total')
+    
+    st.pyplot(plt)
+
+    st.header('Productos')
+
+    rows = st.columns(2)
+    rows[0].dataframe(df_filtrado)
+    rows[1].dataframe(suma_por_item)
+
+
     
     
     
@@ -152,4 +171,3 @@ if not df_filtrado.empty:
 else:
     st.warning('No se encontraron productos con los filtros proporcionados.')
 
-st.pyplot(plt)
