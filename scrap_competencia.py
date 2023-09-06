@@ -141,7 +141,7 @@ if not df_filtrado.empty:
     plt.xlabel('Producto')
     plt.ylabel('Precio')
     plt.xticks(rotation=90, ha='right')
-    plt.title('Top 10 Productos por Monto Total')
+    plt.title('Top 10 Marcas por Monto Total')
     
     st.pyplot(plt)
 
