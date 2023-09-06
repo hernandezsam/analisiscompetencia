@@ -118,7 +118,9 @@ top_10_productos = suma_por_item.sort_values(by='Total_Precio', ascending=False)
 
 metrica1 = df_filtrado['Nombre'].value_counts().sum()
 metrica2 = df_filtrado['Prod'].nunique()
-metrica3 = df_filtrado['Precio'].sum()
+metrica3 = '{:,}'.format(df_filtrado['Precio'].sum()).replace(',','.')
+
+
 
 
 # Mostrar los resultados
@@ -128,8 +130,8 @@ if not df_filtrado.empty:
 
 
     col1,col2,col3=st.columns(3)
-    col1.metric(label="Cant. de Productos",value=metrica1)
-    col2.metric(label="Cant. de Marcas",value=metrica2)
+    col1.metric(label="Cantidad de Productos",value=metrica1)
+    col2.metric(label="Cantidad de Marcas",value=metrica2)
     col3.metric(label="Monto Total",value=metrica3)
 
     plt.figure(figsize=(17, 6))
